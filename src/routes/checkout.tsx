@@ -23,15 +23,14 @@ export const Route = createFileRoute("/checkout")({
 });
 
 const methods = [
-  { id: "cod", label: "الدفع عند الاستلام", icon: Truck },
   { id: "bank_wallet", label: "دفع بنكي ومحافظ", icon: Banknote },
-  { id: "card", label: "بطاقة (قريباً)", icon: CreditCard },
+  { id: "card", label: "بطاقة", icon: CreditCard },
 ] as const;
 
 function CheckoutPage() {
   const { state, cartDetails, cartTotal, clearCart } = useStore();
   const [form, setForm] = useState({ name: "", phone: "", city: "", address: "", note: "", receiptRef: "", mapLink: "" });
-  const [method, setMethod] = useState<string>("cod");
+  const [method, setMethod] = useState<string>("bank_wallet");
   const [bankType, setBankType] = useState<"wallet" | "bank">("wallet");
   const [sent, setSent] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +39,7 @@ function CheckoutPage() {
   const shipping = cartTotal >= 1500 || cartTotal === 0 ? 0 : 35;
   const grand = cartTotal + shipping;
   const methodLabel = methods.find((m) => m.id === method)?.label ?? "";
-  const ready = form.name.trim() !== "" && form.phone.trim() !== "" && cartDetails.length > 0 && (method === "cod" || form.receiptRef.trim() !== "");
+  const ready = form.name.trim() !== "" && form.phone.trim() !== "" && cartDetails.length > 0 && (method !== "bank_wallet" || form.receiptRef.trim() !== "");
 
   const message = [
     `طلب جديد من ${state.info.storeName}`,
@@ -201,8 +200,7 @@ function CheckoutPage() {
               <button
                 key={m.id}
                 onClick={() => setMethod(m.id)}
-                disabled={m.id === "card"}
-                className={`tap-pulse flex flex-col items-center gap-2 rounded-3xl px-4 py-5 text-xs font-semibold disabled:opacity-45 ${
+                className={`tap-pulse flex flex-col items-center gap-2 rounded-3xl px-4 py-5 text-xs font-semibold transition-colors disabled:opacity-45 ${
                   method === m.id
                     ? "bg-primary text-primary-foreground"
                     : "bg-secondary text-secondary-foreground"
@@ -266,8 +264,26 @@ function CheckoutPage() {
                 </div>
               )}
               
-              <div className="pt-3">
-                {field("receiptRef", "رقم الإيصال / مرجع الحوالة (مطلوب)", { dir: "ltr" })}
+              <div className="pt-5 mt-4 border-t border-border">
+                <label className="block">
+                  <span className="text-sm font-bold text-foreground">
+                    رقم الإيصال / مرجع الحوالة <span className="text-destructive">*</span>
+                  </span>
+                  <input
+                    value={form.receiptRef}
+                    onChange={(e) => setForm({ ...form, receiptRef: e.target.value })}
+                    dir="ltr"
+                    placeholder="أدخل رقم الإيصال أو مرجع الحوالة"
+                    className={`mt-2 w-full rounded-2xl border-2 px-4 py-3 text-sm outline-none transition-colors focus:ring-2 focus:ring-ring ${
+                      form.receiptRef.trim() === "" 
+                        ? "border-destructive/40 bg-destructive/5 text-foreground placeholder:text-muted-foreground focus:border-destructive" 
+                        : "border-primary/50 bg-background/70 text-foreground"
+                    }`}
+                  />
+                  {form.receiptRef.trim() === "" && (
+                    <p className="mt-1.5 text-xs text-destructive font-medium">هذا الحقل مطلوب لإتمام الطلب</p>
+                  )}
+                </label>
               </div>
             </div>
           )}

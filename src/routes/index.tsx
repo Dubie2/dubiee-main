@@ -57,18 +57,7 @@ function Index() {
             transition={{ duration: 0.9, ease, delay: 0.5 }}
             className="max-w-xl text-center md:text-right"
           >
-            <span className="glass inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[0.7rem] tracking-[0.2em] text-accent-foreground">
-              مجموعة ٢٠٢٦ الجديدة
-            </span>
-            <h1 className="font-display mt-3 text-4xl leading-[1.15] font-black sm:text-6xl">
-              فخامة تتنفس
-              <span className="text-gradient block">حرير دبي</span>
-            </h1>
-            <p className="mt-3 text-base leading-relaxed text-muted-foreground sm:text-lg">
-              معرض رقمي فني للعبايات والجلابيات. قصّات نقية، ألوان لافندر هادئة، وتفاصيل
-              مصنوعة يدوياً لتمنحك حضوراً لا يُنسى.
-            </p>
-            <div className="mt-4 flex flex-wrap justify-center gap-2 md:justify-start">
+            <div className="flex flex-wrap justify-center gap-2 md:justify-start">
               <Link
                 to="/products"
                 className="tap-pulse rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold text-primary-foreground shadow-soft"

@@ -30,7 +30,7 @@ export function SiteFooter() {
               <RefreshCcw className="size-6" />
             </div>
             <h4 className="font-bold text-foreground text-sm">سياسة استبدال مرنة</h4>
-            <p className="text-xs text-muted-foreground">استبدال سهل خلال 3 أيام</p>
+            <p className="text-xs text-muted-foreground">استبدال سهل خلال يوم واحد</p>
           </div>
           <div className="flex flex-col items-center gap-3">
             <div className="grid size-12 place-items-center rounded-full bg-primary/10 text-primary">

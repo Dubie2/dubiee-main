@@ -490,30 +490,36 @@ function ProductPage() {
                     </button>
                   </div>
                   <div className="p-6">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm text-right">
+                    <div className="overflow-x-auto w-full">
+                      <div className="mb-3 flex items-center justify-between">
+                        <span className="text-xs font-semibold text-muted-foreground bg-secondary/60 px-3 py-1 rounded-full">القياسات بالإنش</span>
+                      </div>
+                      <table className="w-full text-sm text-right whitespace-nowrap">
                         <thead>
-                          <tr className="border-b border-border/50 text-muted-foreground">
-                            <th className="pb-3 font-bold">المقاس</th>
-                            <th className="pb-3 font-bold">الطول (انش)</th>
-                            <th className="pb-3 font-bold">الصدر (انش)</th>
-                            <th className="pb-3 font-bold">طول الكم (انش)</th>
+                          <tr className="border-b-2 border-border text-muted-foreground text-xs sm:text-sm">
+                            <th className="pb-3 font-bold w-[30%]">الرمز / المقاس</th>
+                            <th className="pb-3 font-bold text-center">الطول</th>
+                            <th className="pb-3 font-bold text-center">الصدر</th>
+                            <th className="pb-3 font-bold text-center">طول الكم</th>
                           </tr>
                         </thead>
                         <tbody>
                           {[
-                            { s: "50", l: "50", c: "20", sl: "26" },
-                            { s: "52", l: "52", c: "21", sl: "27" },
-                            { s: "54", l: "54", c: "22", sl: "28" },
-                            { s: "56", l: "56", c: "23", sl: "29" },
-                            { s: "58", l: "58", c: "24", sl: "30" },
-                            { s: "60", l: "60", c: "25", sl: "31" },
+                            { s: "50", label: "S", l: "50", c: "20", sl: "26" },
+                            { s: "52", label: "M", l: "52", c: "21", sl: "27" },
+                            { s: "54", label: "L", l: "54", c: "22", sl: "28" },
+                            { s: "56", label: "XL", l: "56", c: "23", sl: "29" },
+                            { s: "58", label: "XXL", l: "58", c: "24", sl: "30" },
+                            { s: "60", label: "3XL", l: "60", c: "25", sl: "31" },
                           ].map((r, i) => (
-                            <tr key={r.s} className="border-b border-border/20 last:border-0">
-                              <td className="py-3 font-bold">{r.s}</td>
-                              <td className="py-3">{r.l}</td>
-                              <td className="py-3">{r.c}</td>
-                              <td className="py-3">{r.sl}</td>
+                            <tr key={r.s} className="border-b border-border/40 last:border-0 hover:bg-secondary/20 transition-colors">
+                              <td className="py-3.5">
+                                <span className="font-bold">{r.s}</span>
+                                <span className="text-xs text-muted-foreground mr-1.5 font-medium border border-border/50 rounded-md px-1.5 py-0.5">{r.label}</span>
+                              </td>
+                              <td className="py-3.5 text-center font-medium">{r.l}</td>
+                              <td className="py-3.5 text-center font-medium">{r.c}</td>
+                              <td className="py-3.5 text-center font-medium">{r.sl}</td>
                             </tr>
                           ))}
                         </tbody>
