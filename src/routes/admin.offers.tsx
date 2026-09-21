@@ -26,7 +26,7 @@ function AdminOffers() {
   });
 
   const addOffer = async () => {
-    if (!newOffer.title || !newOffer.code) return toast.error("يرجى إكمال العنوان وكود الخصم");
+    if (!newOffer.title || !newOffer.code) { toast.error("يرجى إكمال العنوان وكود الخصم"); return; }
     setIsSubmitting(true);
     try {
       const { error } = await supabase.from('offers').insert([{

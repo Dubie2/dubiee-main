@@ -76,7 +76,8 @@ function AdminProducts() {
 
   const addProduct = async () => {
     if (!newProd.name.trim() || !newProd.price || !newProd.categoryId) {
-      return toast.error("الرجاء إدخال الاسم والسعر واختيار الفئة");
+      toast.error("الرجاء إدخال الاسم والسعر واختيار الفئة");
+      return;
     }
 
     setIsSubmitting(true);

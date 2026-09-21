@@ -24,7 +24,7 @@ function AdminCategories() {
   });
 
   const addCategory = async () => {
-    if (!newCat.name.trim()) return toast.error("يرجى إدخال اسم الفئة");
+    if (!newCat.name.trim()) { toast.error("يرجى إدخال اسم الفئة"); return; }
     const slug = newCat.slug.trim() || newCat.name.trim().toLowerCase().replace(/\s+/g, "-");
     setIsSubmitting(true);
     try {
