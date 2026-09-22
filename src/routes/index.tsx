@@ -34,7 +34,7 @@ const ease = [0.22, 1, 0.36, 1] as const;
 
 function Index() {
   const { state } = useStore();
-  const featured = state.products.slice(0, 4);
+  const featured = state.products.slice(0, 16);
 
   return (
     <div dir="rtl" className="relative min-h-screen overflow-x-hidden">
@@ -83,34 +83,45 @@ function Index() {
           </motion.div>
         </section>
 
-        {/* Categories strip */}
-        <section className="mx-auto max-w-6xl px-5 py-6">
-          <div className="flex flex-col gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4">
-            {state.categories.map((c, i) => (
-              <motion.div
-                key={c.id}
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.55, ease, delay: i * 0.07 }}
-              >
-                <Link
-                  to="/products"
-                  search={{ category: c.id }}
-                  className="tap-pulse glass flex items-center gap-4 overflow-hidden rounded-2xl p-3 sm:block sm:rounded-3xl sm:p-0"
-                >
-                  <img
-                    src={c.image}
-                    alt={c.name}
-                    loading="lazy"
-                    className="h-14 w-14 shrink-0 rounded-xl object-cover sm:h-40 sm:w-full sm:rounded-none"
-                  />
-                  <p className="font-display text-base font-bold sm:px-4 sm:py-3 sm:text-sm">{c.name}</p>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+        {/* Showcase Area */}
+        {state.showcase?.mainImage && (
+          <section className="mx-auto max-w-6xl px-5 py-6">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease }}
+              className="flex flex-col gap-4"
+            >
+              <div className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group">
+                <img 
+                  src={state.showcase.mainImage} 
+                  alt="عرض مميز" 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                />
+              </div>
+
+              {state.showcase.gallery && state.showcase.gallery.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4">
+                  {state.showcase.gallery.map((img, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: idx * 0.1 }}
+                      className="aspect-square rounded-2xl overflow-hidden shadow-md group"
+                    >
+                      <img 
+                        src={img} 
+                        alt={`صورة فرعية ${idx + 1}`} 
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </section>
+        )}
 
         {/* Collection */}
         <section id="collection" className="mx-auto max-w-6xl px-5 py-10">
@@ -127,7 +138,7 @@ function Index() {
             </h2>
           </motion.header>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
             {featured.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />
             ))}

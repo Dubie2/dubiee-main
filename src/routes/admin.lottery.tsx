@@ -520,7 +520,24 @@ function AdminLottery() {
         </AdminCard>
       )}
 
-      <AdminCard title="إعدادات WhatsApp Cloud API">
+      <AdminCard title="إعدادات السحب التلقائي (الزر والإشعارات)">
+        <label className="flex items-center justify-between rounded-2xl bg-background/80 px-4 py-3 text-sm mb-3">
+          <span>إظهار زر "معاك كرت السحب" العائم في واجهة المتجر</span>
+          <input
+            type="checkbox"
+            checked={settings.showButton ?? true}
+            onChange={(e) => {
+              const newVal = e.target.checked;
+              updateLottery({ settings: { ...settings, showButton: newVal } });
+              // Also save immediately to Supabase
+              supabase.from("system_settings").upsert(
+                { key_name: "lotterySettings", key_value: JSON.stringify({ ...settings, showButton: newVal }) },
+                { onConflict: "key_name" }
+              ).then();
+            }}
+            className="size-5 accent-[oklch(0.72_0.09_300)]"
+          />
+        </label>
         <label className="flex items-center justify-between rounded-2xl bg-background/80 px-4 py-3 text-sm">
           <span>تفعيل الإرسال التلقائي عبر WhatsApp Cloud API</span>
           <input

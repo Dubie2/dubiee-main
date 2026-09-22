@@ -66,7 +66,7 @@ function ProductsPage() {
       // Text Search
       if (q.trim()) {
         const query = q.toLowerCase();
-        if (!p.name.toLowerCase().includes(query) && !p.tag?.toLowerCase().includes(query)) {
+        if (!p.name.toLowerCase().includes(query)) {
           return false;
         }
       }

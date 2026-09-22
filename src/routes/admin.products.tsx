@@ -14,9 +14,23 @@ export const Route = createFileRoute("/admin/products")({
 interface NewProductForm {
   name: string;
   tag: string;
-  price: number;
-  oldPrice: number;
-  stock: number;
+  price: number | string;
+  oldPrice: number | string;
+  stock: number | string;
+  colors: string;
+  fabric: string;
+  categoryId: string;
+  sizes: string;
+  description: string;
+  images: string[];
+}
+
+interface EditProductForm {
+  name: string;
+  tag: string;
+  price: string;
+  oldPrice: string;
+  stock: string;
   colors: string;
   fabric: string;
   categoryId: string;
@@ -46,6 +60,7 @@ function AdminProducts() {
   const [isAdding, setIsAdding] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [newProd, setNewProd] = useState<NewProductForm>(initialNewProd);
+  const [editingProduct, setEditingProduct] = useState<EditProductForm | null>(null);
 
   const handleUploadMultiple = async (
     files: FileList | null,
@@ -329,11 +344,6 @@ function AdminProducts() {
                 onChange={(v) => setNewProd((s) => ({ ...s, name: v }))}
               />
               <Field
-                label="الوسم"
-                value={newProd.tag}
-                onChange={(v) => setNewProd((s) => ({ ...s, tag: v }))}
-              />
-              <Field
                 label="السعر (د.إ)"
                 type="number"
                 value={newProd.price || ""}
@@ -344,12 +354,6 @@ function AdminProducts() {
                 type="number"
                 value={newProd.oldPrice || ""}
                 onChange={(v) => setNewProd((s) => ({ ...s, oldPrice: Number(v) }))}
-              />
-              <Field
-                label="المخزون"
-                type="number"
-                value={newProd.stock}
-                onChange={(v) => setNewProd((s) => ({ ...s, stock: Number(v) }))}
               />
               <Field
                 label="اللون (مفصولة بفاصلة)"
@@ -406,13 +410,32 @@ function AdminProducts() {
                 <p className="text-sm font-bold truncate">{p.name}</p>
                 <p className="text-xs text-muted-foreground">
                   {state.categories.find((c) => c.id === p.categoryId)?.name ?? "—"} · {p.price} د.إ
-                  · مخزون {p.stock}
                   {p.images && p.images.length > 1 && (
                     <span className="mr-2 text-primary font-bold">({p.images.length} صور)</span>
                   )}
                 </p>
               </div>
-              <AdminButton tone="ghost" onClick={() => setOpenId(openId === p.id ? null : p.id)}>
+              <AdminButton tone="ghost" onClick={() => {
+                if (openId === p.id) {
+                  setOpenId(null);
+                  setEditingProduct(null);
+                } else {
+                  setOpenId(p.id);
+                  setEditingProduct({
+                    name: p.name || "",
+                    tag: p.tag || "",
+                    price: p.price?.toString() || "",
+                    oldPrice: p.oldPrice?.toString() || "",
+                    stock: p.stock?.toString() || "0",
+                    colors: p.colors?.join(", ") || p.color || "",
+                    fabric: p.fabric || "",
+                    categoryId: p.categoryId || "",
+                    sizes: p.sizes?.join(", ") || "",
+                    description: p.description || "",
+                    images: p.images || [],
+                  });
+                }
+              }}>
                 {openId === p.id ? "إغلاق" : "تعديل"}
               </AdminButton>
               <AdminButton tone="danger" onClick={() => deleteProductDb(p.id)}>
@@ -421,46 +444,35 @@ function AdminProducts() {
             </div>
 
             {/* EDIT PRODUCT ACCORDION */}
-            {openId === p.id && (
+            {openId === p.id && editingProduct && (
               <div className="mt-5 grid gap-4 border-t border-border pt-5 sm:grid-cols-2">
                 <Field
                   label="الاسم"
-                  value={p.name}
-                  onChange={(v) => updateProductDb(p.id, { name: v })}
-                />
-                <Field
-                  label="الوسم"
-                  value={p.tag}
-                  onChange={(v) => updateProductDb(p.id, { tag: v })}
+                  value={editingProduct.name}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, name: v } : null)}
                 />
                 <Field
                   label="السعر الحالي (د.إ)"
                   type="number"
-                  value={p.price}
-                  onChange={(v) => updateProductDb(p.id, { price: Number(v) || 0 })}
+                  value={editingProduct.price}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, price: v } : null)}
                 />
                 <Field
                   label="السعر قبل الخصم (للعرض فقط)"
                   type="number"
-                  value={p.oldPrice ?? 0}
-                  onChange={(v) => updateProductDb(p.id, { oldPrice: Number(v) || undefined })}
-                />
-                <Field
-                  label="المخزون"
-                  type="number"
-                  value={p.stock}
-                  onChange={(v) => updateProductDb(p.id, { stock: Number(v) || 0 })}
+                  value={editingProduct.oldPrice}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, oldPrice: v } : null)}
                 />
                 <Field
                   label="نوع القماش"
-                  value={p.fabric || ""}
-                  onChange={(v) => updateProductDb(p.id, { fabric: v })}
+                  value={editingProduct.fabric}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, fabric: v } : null)}
                 />
                 <label className="block">
                   <span className="text-xs text-muted-foreground">الفئة</span>
                   <select
-                    value={p.categoryId}
-                    onChange={(e) => updateProductDb(p.id, { categoryId: e.target.value })}
+                    value={editingProduct.categoryId}
+                    onChange={(e) => setEditingProduct(s => s ? { ...s, categoryId: e.target.value } : null)}
                     className="mt-1.5 w-full rounded-2xl bg-background/80 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-ring"
                   >
                     <option value="">-- اختر الفئة --</option>
@@ -473,41 +485,27 @@ function AdminProducts() {
                 </label>
                 <Field
                   label="القياسات (مفصولة بفاصلة)"
-                  value={p.sizes.join(", ")}
-                  onChange={(v) =>
-                    updateProductDb(p.id, {
-                      sizes: v
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    })
-                  }
+                  value={editingProduct.sizes}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, sizes: v } : null)}
                 />
                 <Field
                   label="الألوان (مفصولة بفاصلة)"
-                  value={p.colors?.join(", ") || p.color || ""}
-                  onChange={(v) =>
-                    updateProductDb(p.id, {
-                      colors: v
-                        .split(",")
-                        .map((s) => s.trim())
-                        .filter(Boolean),
-                    })
-                  }
+                  value={editingProduct.colors}
+                  onChange={(v) => setEditingProduct(s => s ? { ...s, colors: v } : null)}
                 />
                 <div className="sm:col-span-2">
                   <Field
                     label="الوصف"
                     area
-                    value={p.description}
-                    onChange={(v) => updateProductDb(p.id, { description: v })}
+                    value={editingProduct.description}
+                    onChange={(v) => setEditingProduct(s => s ? { ...s, description: v } : null)}
                   />
                 </div>
 
                 {/* EDIT GALLERY */}
                 <div className="sm:col-span-2 pt-2 border-t border-border mt-4">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-bold">معرض الصور ({p.images?.length || 0} صور)</p>
+                    <p className="text-sm font-bold">معرض الصور ({editingProduct.images?.length || 0} صور)</p>
                     <label className="tap-pulse flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-bold text-foreground hover:border-primary/50">
                       {isUploading ? (
                         <Loader2 className="size-3.5 animate-spin" />
@@ -523,7 +521,7 @@ function AdminProducts() {
                         className="hidden"
                         onChange={(e) =>
                           handleUploadMultiple(e.target.files, (urls) =>
-                            updateProductDb(p.id, { images: [...(p.images || []), ...urls] })
+                            setEditingProduct(s => s ? { ...s, images: [...(s.images || []), ...urls] } : null)
                           )
                         }
                       />
@@ -531,7 +529,7 @@ function AdminProducts() {
                   </div>
 
                   <div className="flex flex-wrap gap-3">
-                    {p.images?.map((img, idx) => (
+                    {editingProduct.images?.map((img, idx) => (
                       <div
                         key={idx}
                         className="group relative size-24 rounded-2xl border border-border overflow-hidden bg-background shadow-xs"
@@ -548,10 +546,13 @@ function AdminProducts() {
                               type="button"
                               title="تعيين كصورة رئيسية"
                               onClick={() => {
-                                const copy = [...(p.images || [])];
-                                const [selected] = copy.splice(idx, 1);
-                                if (selected) copy.unshift(selected);
-                                updateProductDb(p.id, { images: copy });
+                                setEditingProduct(s => {
+                                  if (!s) return null;
+                                  const copy = [...(s.images || [])];
+                                  const [selected] = copy.splice(idx, 1);
+                                  if (selected) copy.unshift(selected);
+                                  return { ...s, images: copy };
+                                });
                               }}
                               className="grid size-6 place-items-center rounded-full bg-background text-amber-500 hover:scale-110"
                             >
@@ -562,9 +563,10 @@ function AdminProducts() {
                             type="button"
                             title="حذف الصورة"
                             onClick={() =>
-                              updateProductDb(p.id, {
-                                images: p.images!.filter((_, i) => i !== idx),
-                              })
+                              setEditingProduct(s => s ? {
+                                ...s,
+                                images: s.images!.filter((_, i) => i !== idx),
+                              } : null)
                             }
                             className="grid size-6 place-items-center rounded-full bg-background text-destructive hover:scale-110"
                           >
@@ -574,6 +576,31 @@ function AdminProducts() {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                <div className="sm:col-span-2 pt-4 flex justify-end gap-2 border-t border-border mt-4">
+                  <AdminButton tone="ghost" onClick={() => { setOpenId(null); setEditingProduct(null); }}>
+                    إلغاء
+                  </AdminButton>
+                  <AdminButton onClick={async () => {
+                    await updateProductDb(p.id, {
+                      name: editingProduct.name,
+                      tag: editingProduct.tag,
+                      price: Number(editingProduct.price) || 0,
+                      oldPrice: editingProduct.oldPrice ? Number(editingProduct.oldPrice) : undefined,
+                      stock: Number(editingProduct.stock) || 0,
+                      fabric: editingProduct.fabric,
+                      categoryId: editingProduct.categoryId,
+                      sizes: editingProduct.sizes.split(",").map(x => x.trim()).filter(Boolean),
+                      colors: editingProduct.colors.split(",").map(x => x.trim()).filter(Boolean),
+                      description: editingProduct.description,
+                      images: editingProduct.images
+                    });
+                    setOpenId(null);
+                    setEditingProduct(null);
+                  }}>
+                    حفظ التعديلات
+                  </AdminButton>
                 </div>
               </div>
             )}

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, MessageCircle, Settings, ShieldCheck, Truck, RefreshCcw, HeadphonesIcon } from "lucide-react";
+import { Instagram, MessageCircle, Settings, ShieldCheck, Truck, RefreshCcw, HeadphonesIcon, Facebook, Ghost, Send } from "lucide-react";
 
 import { useStore, whatsappLink } from "@/lib/store";
 
@@ -92,14 +92,46 @@ export function SiteFooter() {
               >
                 <MessageCircle className="size-4" /> واتساب
               </a>
-              <a
-                href={`https://instagram.com/${state.info.instagram}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Instagram className="size-4" /> إنستغرام
-              </a>
+              {state.info.instagram ? (
+                <a
+                  href={`https://instagram.com/${state.info.instagram.replace("@", "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Instagram className="size-4" /> إنستغرام
+                </a>
+              ) : null}
+              {state.info.facebook ? (
+                <a
+                  href={state.info.facebook.startsWith("http") ? state.info.facebook : `https://facebook.com/${state.info.facebook}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Facebook className="size-4" /> فيسبوك
+                </a>
+              ) : null}
+              {state.info.snapchat ? (
+                <a
+                  href={`https://snapchat.com/add/${state.info.snapchat.replace("@", "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Ghost className="size-4" /> سناب شات
+                </a>
+              ) : null}
+              {state.info.telegram ? (
+                <a
+                  href={`https://t.me/${state.info.telegram.replace("@", "")}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Send className="size-4" /> تليجرام
+                </a>
+              ) : null}
               {/* NOTE: admin link should not be visible to normal customers as per user instructions, but since it's an admin dashboard currently accessed via route, we can hide it in footer or keep it very subtle */}
             </div>
           </div>

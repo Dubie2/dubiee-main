@@ -122,23 +122,25 @@ export function LotteryEntry() {
 
   return (
     <>
-      <motion.button
-        onClick={() => setOpen(true)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.96 }}
-        animate={{ boxShadow: ["0 0 0 0 rgba(177,156,217,0.45)", "0 0 0 16px rgba(177,156,217,0)"] }}
-        transition={{ duration: 2, repeat: Infinity }}
-        className="glass-strong fixed bottom-5 left-4 z-40 flex max-w-[85vw] items-center gap-2.5 rounded-full py-3 pr-4 pl-3 text-right"
-      >
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <Gift className="size-4" />
-        </span>
-        <span className="font-display text-[11px] leading-tight font-bold sm:text-xs">
-          معاك كرت السحب؟ اضغط هنا
-          <br />
-          وادخل السحب الأسبوعي 🎁
-        </span>
-      </motion.button>
+      {state.lottery.settings.showButton !== false && (
+        <motion.button
+          onClick={() => setOpen(true)}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.96 }}
+          animate={{ boxShadow: ["0 0 0 0 rgba(177,156,217,0.45)", "0 0 0 16px rgba(177,156,217,0)"] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          className="glass-strong fixed bottom-5 left-4 z-40 flex max-w-[85vw] items-center gap-2.5 rounded-full py-3 pr-4 pl-3 text-right"
+        >
+          <span className="flex size-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <Gift className="size-4" />
+          </span>
+          <span className="font-display text-[11px] leading-tight font-bold sm:text-xs">
+            معاك كرت السحب؟ اضغط هنا
+            <br />
+            وادخل السحب الأسبوعي 🎁
+          </span>
+        </motion.button>
+      )}
 
       <AnimatePresence>
         {open && (

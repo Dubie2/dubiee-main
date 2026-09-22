@@ -12,7 +12,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { CartDrawer } from "../components/CartDrawer";
-import { FloatingWhatsApp } from "../components/FloatingWhatsApp";
 import { LotteryEntry } from "../components/LotteryEntry";
 import { Toaster } from "sonner";
 import { StoreProvider } from "../lib/store";
@@ -158,7 +157,6 @@ function RootComponent() {
         {!isAdmin && (
           <>
             <LotteryEntry />
-            <FloatingWhatsApp />
             <CartDrawer />
           </>
         )}

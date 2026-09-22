@@ -25,6 +25,7 @@ import { Route as AdminInfoRouteImport } from './routes/admin.info'
 import { Route as AdminLotteryRouteImport } from './routes/admin.lottery'
 import { Route as AdminOffersRouteImport } from './routes/admin.offers'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
+import { Route as AdminShowcaseRouteImport } from './routes/admin.showcase'
 import { Route as ProductsIndexRouteImport } from './routes/products.index'
 import { Route as ProductsIdRouteImport } from './routes/products.$id'
 
@@ -108,6 +109,11 @@ const AdminProductsRoute = AdminProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminShowcaseRoute = AdminShowcaseRouteImport.update({
+  id: '/showcase',
+  path: '/showcase',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ProductsIndexRoute = ProductsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/admin/lottery': typeof AdminLotteryRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/showcase': typeof AdminShowcaseRoute
   '/products/$id': typeof ProductsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/products/': typeof ProductsIndexRoute
@@ -153,6 +160,7 @@ export interface FileRoutesByTo {
   '/admin/lottery': typeof AdminLotteryRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/showcase': typeof AdminShowcaseRoute
   '/products/$id': typeof ProductsIdRoute
   '/admin': typeof AdminIndexRoute
   '/products': typeof ProductsIndexRoute
@@ -174,6 +182,7 @@ export interface FileRoutesById {
   '/admin/lottery': typeof AdminLotteryRoute
   '/admin/offers': typeof AdminOffersRoute
   '/admin/products': typeof AdminProductsRoute
+  '/admin/showcase': typeof AdminShowcaseRoute
   '/products/$id': typeof ProductsIdRoute
   '/admin/': typeof AdminIndexRoute
   '/products/': typeof ProductsIndexRoute
@@ -196,6 +205,7 @@ export interface FileRouteTypes {
     | '/admin/lottery'
     | '/admin/offers'
     | '/admin/products'
+    | '/admin/showcase'
     | '/products/$id'
     | '/admin/'
     | '/products/'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/admin/lottery'
     | '/admin/offers'
     | '/admin/products'
+    | '/admin/showcase'
     | '/products/$id'
     | '/admin'
     | '/products'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/admin/lottery'
     | '/admin/offers'
     | '/admin/products'
+    | '/admin/showcase'
     | '/products/$id'
     | '/admin/'
     | '/products/'
@@ -365,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminProductsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/showcase': {
+      id: '/admin/showcase'
+      path: '/showcase'
+      fullPath: '/admin/showcase'
+      preLoaderRoute: typeof AdminShowcaseRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/products/': {
       id: '/products/'
       path: '/'
@@ -389,6 +408,7 @@ interface AdminRouteChildren {
   AdminLotteryRoute: typeof AdminLotteryRoute
   AdminOffersRoute: typeof AdminOffersRoute
   AdminProductsRoute: typeof AdminProductsRoute
+  AdminShowcaseRoute: typeof AdminShowcaseRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -399,6 +419,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLotteryRoute: AdminLotteryRoute,
   AdminOffersRoute: AdminOffersRoute,
   AdminProductsRoute: AdminProductsRoute,
+  AdminShowcaseRoute: AdminShowcaseRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

@@ -83,9 +83,7 @@ export function ProductCard({ product, index }: { product: Product; index: numbe
               style={{ backgroundImage: glare }}
               className="pointer-events-none absolute inset-0 opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100"
             />
-            <span className="glass-strong absolute top-2 right-2 sm:top-3 sm:right-3 rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[0.6rem] sm:text-[0.68rem] font-medium tracking-wide text-accent-foreground z-10">
-              {product.tag}
-            </span>
+
 
             {/* Wishlist Heart */}
             <button

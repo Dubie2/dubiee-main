@@ -69,6 +69,9 @@ export type SiteInfo = {
   storeName: string;
   whatsapp: string;
   instagram: string;
+  facebook: string;
+  snapchat: string;
+  telegram: string;
   email: string;
   address: string;
   hours: string;
@@ -113,6 +116,7 @@ export type LotteryRound = {
 };
 
 export type LotterySettings = {
+  showButton: boolean;
   autoSend: boolean;
   apiKey: string;
   phoneNumberId: string;
@@ -125,12 +129,18 @@ export type LotteryState = {
   settings: LotterySettings;
 };
 
+export type Showcase = {
+  mainImage: string;
+  gallery: string[];
+};
+
 type StoreState = {
   categories: Category[];
   products: Product[];
   offers: Offer[];
   info: SiteInfo;
   branding: Branding;
+  showcase: Showcase;
   cart: CartLine[];
   isCartOpen: boolean;
   lottery: LotteryState;
@@ -149,6 +159,9 @@ const defaultState: StoreState = {
     storeName: "Dubai Abaya",
     whatsapp: "",
     instagram: "",
+    facebook: "",
+    snapchat: "",
+    telegram: "",
     email: "",
     address: "",
     hours: "",
@@ -163,7 +176,7 @@ const defaultState: StoreState = {
     tickets: [],
     rounds: [],
     locked: false,
-    settings: { autoSend: false, apiKey: "", phoneNumberId: "" },
+    settings: { showButton: true, autoSend: false, apiKey: "", phoneNumberId: "" },
   },
   isLoading: true,
   isAdminAuthenticated: false,
@@ -288,11 +301,30 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
       // Map settings & branding
       const info: SiteInfo = { ...defaultState.info };
-      const branding: Branding = { ...defaultState.branding };
+      const branding = { logo: "", mark: "" };
+      const showcase: Showcase = { mainImage: "", gallery: [] };
+      const lotterySettings: LotterySettings = { ...defaultState.lottery.settings };
 
-      settingsData?.forEach((s: any) => {
+      (settingsData || []).forEach((s: any) => {
         if (s.key_name === "logo") branding.logo = s.key_value || "";
         if (s.key_name === "logoMark") branding.mark = s.key_value || "";
+        if (s.key_name === "showcaseMain") showcase.mainImage = s.key_value || "";
+        if (s.key_name === "showcaseGallery") {
+          try {
+            showcase.gallery = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value || [];
+          } catch {
+            showcase.gallery = [];
+          }
+        }
+        if (s.key_name === "lotterySettings") {
+          try {
+            const parsed = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value;
+            lotterySettings.showButton = parsed.showButton ?? true;
+            lotterySettings.autoSend = parsed.autoSend ?? false;
+            lotterySettings.apiKey = parsed.apiKey ?? "";
+            lotterySettings.phoneNumberId = parsed.phoneNumberId ?? "";
+          } catch (e) {}
+        }
         if (s.key_name === "wallets") {
           try {
             info.wallets = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value || [];
@@ -362,11 +394,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         offers,
         info,
         branding,
+        showcase,
         lottery: {
           tickets,
           rounds,
           locked: !activeRound,
-          settings: { autoSend: false, apiKey: "", phoneNumberId: "" },
+          settings: lotterySettings,
         },
         isLoading: false,
       };

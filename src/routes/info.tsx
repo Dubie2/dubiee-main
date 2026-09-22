@@ -5,11 +5,14 @@ import {
   Clock,
   Copy,
   CreditCard,
+  Facebook,
+  Ghost,
   Headphones,
   Instagram,
   Mail,
   MapPin,
   MessageCircle,
+  Send,
   Sparkles,
   Wallet,
 } from "lucide-react";
@@ -103,6 +106,63 @@ function InfoPage() {
                 </span>
                 <span className="text-xs text-muted-foreground font-mono" dir="ltr">
                   @{info.instagram.replace("@", "")}
+                </span>
+              </a>
+            ) : null}
+
+            {info.facebook ? (
+              <a
+                href={info.facebook.startsWith("http") ? info.facebook : `https://facebook.com/${info.facebook}`}
+                target="_blank"
+                rel="noreferrer"
+                className="tap-pulse flex items-center justify-between gap-3 rounded-3xl bg-background/80 px-5 py-4 text-sm font-semibold transition hover:border-primary/40 hover:bg-background"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-9 place-items-center rounded-2xl bg-blue-600/15 text-blue-600">
+                    <Facebook className="size-5" />
+                  </span>
+                  فيسبوك
+                </span>
+                <span className="text-xs text-muted-foreground font-mono" dir="ltr">
+                  {info.facebook.startsWith("http") ? "رابط الحساب" : info.facebook}
+                </span>
+              </a>
+            ) : null}
+
+            {info.snapchat ? (
+              <a
+                href={`https://snapchat.com/add/${info.snapchat.replace("@", "")}`}
+                target="_blank"
+                rel="noreferrer"
+                className="tap-pulse flex items-center justify-between gap-3 rounded-3xl bg-background/80 px-5 py-4 text-sm font-semibold transition hover:border-primary/40 hover:bg-background"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-9 place-items-center rounded-2xl bg-yellow-400/15 text-yellow-500">
+                    <Ghost className="size-5" />
+                  </span>
+                  سناب شات
+                </span>
+                <span className="text-xs text-muted-foreground font-mono" dir="ltr">
+                  @{info.snapchat.replace("@", "")}
+                </span>
+              </a>
+            ) : null}
+
+            {info.telegram ? (
+              <a
+                href={`https://t.me/${info.telegram.replace("@", "")}`}
+                target="_blank"
+                rel="noreferrer"
+                className="tap-pulse flex items-center justify-between gap-3 rounded-3xl bg-background/80 px-5 py-4 text-sm font-semibold transition hover:border-primary/40 hover:bg-background"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="grid size-9 place-items-center rounded-2xl bg-sky-500/15 text-sky-500">
+                    <Send className="size-5" />
+                  </span>
+                  تليجرام
+                </span>
+                <span className="text-xs text-muted-foreground font-mono" dir="ltr">
+                  {info.telegram}
                 </span>
               </a>
             ) : null}

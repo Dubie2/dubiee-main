@@ -34,6 +34,9 @@ function AdminInfo() {
         { key_name: "storeName", key_value: info.storeName || "Dubai Abaya" },
         { key_name: "whatsapp", key_value: info.whatsapp || "" },
         { key_name: "instagram", key_value: info.instagram || "" },
+        { key_name: "facebook", key_value: info.facebook || "" },
+        { key_name: "snapchat", key_value: info.snapchat || "" },
+        { key_name: "telegram", key_value: info.telegram || "" },
         { key_name: "email", key_value: info.email || "" },
         { key_name: "address", key_value: info.address || "" },
         { key_name: "hours", key_value: info.hours || "" },
@@ -201,6 +204,24 @@ function AdminInfo() {
             dir="ltr"
             value={info.instagram}
             onChange={(v) => setInfo({ instagram: v })}
+          />
+          <Field
+            label="حساب فيسبوك (الرابط أو اسم المستخدم)"
+            dir="ltr"
+            value={info.facebook || ""}
+            onChange={(v) => setInfo({ facebook: v })}
+          />
+          <Field
+            label="حساب سناب شات (بدون @)"
+            dir="ltr"
+            value={info.snapchat || ""}
+            onChange={(v) => setInfo({ snapchat: v })}
+          />
+          <Field
+            label="تليجرام (رقم أو معرف)"
+            dir="ltr"
+            value={info.telegram || ""}
+            onChange={(v) => setInfo({ telegram: v })}
           />
           <Field label="البريد الإلكتروني" dir="ltr" value={info.email} onChange={(v) => setInfo({ email: v })} />
           <Field label="العنوان / المدينة" value={info.address} onChange={(v) => setInfo({ address: v })} />

@@ -231,21 +231,9 @@ function ProductPage() {
             {/* RIGHT SIDE (Info) */}
             <div className="px-5 pt-2 sm:pt-0 pb-2">
               <div className="flex flex-wrap items-center gap-2.5">
-                <span className="inline-block rounded-full bg-primary/15 text-primary px-3 py-1 text-xs font-bold tracking-wider">
-                  {product.tag || "جديد"}
-                </span>
                 {product.fabric && (
                   <span className="inline-block rounded-full bg-secondary px-3 py-1 text-xs font-semibold text-secondary-foreground">
                     خامة: {product.fabric}
-                  </span>
-                )}
-                {product.stock > 0 ? (
-                  <span className="inline-block rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 text-xs font-bold">
-                    متوفر بالمخزون ({product.stock} قطعة)
-                  </span>
-                ) : (
-                  <span className="inline-block rounded-full bg-destructive/10 text-destructive px-3 py-1 text-xs font-bold">
-                    نفدت الكمية
                   </span>
                 )}
               </div>
@@ -395,11 +383,51 @@ function ProductPage() {
           </div>
         </div>
 
+        {/* Related Products */}
+        {similarProducts.length > 0 && (
+          <div className="mx-auto max-w-7xl px-5 mt-8 sm:mt-10">
+            <motion.header
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-4 text-center sm:text-right"
+            >
+              <h2 className="font-display text-3xl font-bold">قد يعجبك أيضاً</h2>
+              <p className="mt-2 text-sm text-muted-foreground">استكشفي تشكيلة تتماشى مع ذوقك</p>
+            </motion.header>
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+              {similarProducts.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Recently Viewed */}
+        {recentlyViewedIds.length > 0 && (
+          <div className="mx-auto max-w-7xl px-5 mt-10 border-t border-border/40 pt-8">
+            <motion.header
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mb-4 text-center sm:text-right"
+            >
+              <h2 className="font-display text-2xl font-bold">شوهدت مؤخراً</h2>
+            </motion.header>
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
+              {recentlyViewedIds.map((id, i) => {
+                const rp = state.products.find(p => p.id === id);
+                return rp ? <ProductCard key={rp.id} product={rp} index={i} /> : null;
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Reviews Section */}
         {product.reviews && product.reviews.length > 0 && (
-          <div className="mx-auto max-w-7xl px-5 mt-4 sm:mt-6">
+          <div className="mx-auto max-w-7xl px-5 mt-10 border-t border-border/40 pt-8">
             <div className="rounded-4xl bg-secondary/30 p-4 sm:p-6">
-              <h2 className="font-display text-xl font-bold mb-2">آراء العملاء</h2>
+              <h2 className="font-display text-xl font-bold mb-4">آراء العملاء</h2>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {product.reviews.map((r) => (
                   <div key={r.id} className="glass rounded-3xl p-6">
@@ -418,46 +446,6 @@ function ProductPage() {
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        )}
-
-        {/* Related Products */}
-        {similarProducts.length > 0 && (
-          <div className="mx-auto max-w-7xl px-5 mt-6">
-            <motion.header
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-2 text-center sm:text-right"
-            >
-              <h2 className="font-display text-3xl font-bold">قد يعجبك أيضاً</h2>
-              <p className="mt-3 text-sm text-muted-foreground">استكشفي تشكيلة تتماشى مع ذوقك</p>
-            </motion.header>
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-              {similarProducts.map((p, i) => (
-                <ProductCard key={p.id} product={p} index={i} />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Recently Viewed */}
-        {recentlyViewedIds.length > 0 && (
-          <div className="mx-auto max-w-7xl px-5 mt-6 border-t border-border/40 pt-4">
-            <motion.header
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mb-2 text-center sm:text-right"
-            >
-              <h2 className="font-display text-2xl font-bold">شوهدت مؤخراً</h2>
-            </motion.header>
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-4">
-              {recentlyViewedIds.map((id, i) => {
-                const rp = state.products.find(p => p.id === id);
-                return rp ? <ProductCard key={rp.id} product={rp} index={i} /> : null;
-              })}
             </div>
           </div>
         )}
@@ -505,12 +493,12 @@ function ProductPage() {
                         </thead>
                         <tbody>
                           {[
-                            { s: "50", label: "S", l: "50", c: "20", sl: "26" },
-                            { s: "52", label: "M", l: "52", c: "21", sl: "27" },
-                            { s: "54", label: "L", l: "54", c: "22", sl: "28" },
-                            { s: "56", label: "XL", l: "56", c: "23", sl: "29" },
-                            { s: "58", label: "XXL", l: "58", c: "24", sl: "30" },
-                            { s: "60", label: "3XL", l: "60", c: "25", sl: "31" },
+                            { s: "50", label: "S", l: "50", c: "20", sl: "20" },
+                            { s: "52", label: "M", l: "52", c: "21", sl: "21" },
+                            { s: "54", label: "L", l: "54", c: "22", sl: "22" },
+                            { s: "56", label: "XL", l: "56", c: "23", sl: "23" },
+                            { s: "58", label: "XXL", l: "58", c: "24", sl: "24" },
+                            { s: "60", label: "3XL", l: "60", c: "25", sl: "25" },
                           ].map((r, i) => (
                             <tr key={r.s} className="border-b border-border/40 last:border-0 hover:bg-secondary/20 transition-colors">
                               <td className="py-3.5">
