@@ -129,27 +129,43 @@ function AdminInfo() {
                   <p className="text-xs text-muted-foreground">بدون شعار</p>
                 )}
               </div>
-              <label className="tap-pulse flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-bold hover:border-primary/50">
-                رفع
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) {
-                      uploadImageFile(f, async (url) => {
-                        setBranding({ logo: url });
-                        await supabase
-                          .from("system_settings")
-                          .upsert({ key_name: "logo", key_value: url }, { onConflict: "key_name" });
-                        toast.success("تم حفظ الشعار في قاعدة البيانات بنجاح");
-                        await refreshData();
-                      });
-                    }
-                  }}
-                />
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="tap-pulse flex cursor-pointer items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-bold hover:border-primary/50">
+                  رفع
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        uploadImageFile(f, async (url) => {
+                          setBranding({ logo: url });
+                          await supabase
+                            .from("system_settings")
+                            .upsert({ key_name: "logo", key_value: url }, { onConflict: "key_name" });
+                          toast.success("تم حفظ الشعار في قاعدة البيانات بنجاح");
+                          await refreshData();
+                        });
+                      }
+                    }}
+                  />
+                </label>
+                {branding.logo && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setBranding({ logo: "" });
+                      await supabase.from("system_settings").delete().eq("key_name", "logo");
+                      toast.success("تم إزالة الشعار");
+                      await refreshData();
+                    }}
+                    className="tap-pulse flex cursor-pointer items-center justify-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-500/20"
+                  >
+                    إزالة
+                  </button>
+                )}
+              </div>
             </div>
           </div>
 
@@ -163,27 +179,43 @@ function AdminInfo() {
                   <p className="text-xs text-muted-foreground">بدون أيقونة</p>
                 )}
               </div>
-              <label className="tap-pulse flex cursor-pointer items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-bold hover:border-primary/50">
-                رفع
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) {
-                      uploadImageFile(f, async (url) => {
-                        setBranding({ mark: url });
-                        await supabase
-                          .from("system_settings")
-                          .upsert({ key_name: "logoMark", key_value: url }, { onConflict: "key_name" });
-                        toast.success("تم حفظ أيقونة الشعار في قاعدة البيانات بنجاح");
-                        await refreshData();
-                      });
-                    }
-                  }}
-                />
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="tap-pulse flex cursor-pointer items-center justify-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-xs font-bold hover:border-primary/50">
+                  رفع
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) {
+                        uploadImageFile(f, async (url) => {
+                          setBranding({ mark: url });
+                          await supabase
+                            .from("system_settings")
+                            .upsert({ key_name: "logoMark", key_value: url }, { onConflict: "key_name" });
+                          toast.success("تم حفظ أيقونة الشعار في قاعدة البيانات بنجاح");
+                          await refreshData();
+                        });
+                      }
+                    }}
+                  />
+                </label>
+                {branding.mark && (
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      setBranding({ mark: "" });
+                      await supabase.from("system_settings").delete().eq("key_name", "logoMark");
+                      toast.success("تم إزالة أيقونة الموقع");
+                      await refreshData();
+                    }}
+                    className="tap-pulse flex cursor-pointer items-center justify-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-xs font-bold text-red-500 hover:bg-red-500/20"
+                  >
+                    إزالة
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
