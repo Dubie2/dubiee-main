@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
-import { Boxes, Gift, Home, Image, Info, LayoutDashboard, LayoutTemplate, Lock, LogOut, Percent, Tags } from "lucide-react";
+import { Boxes, Gift, Home, Image, Info, LayoutDashboard, LayoutTemplate, Lock, LogOut, Megaphone, Percent, Tags } from "lucide-react";
 import { useState } from "react";
 
 import { useStore } from "@/lib/store";
@@ -27,6 +27,7 @@ const nav = [
   { to: "/admin/offers", label: "العروض", icon: Percent },
   { to: "/admin/lottery", label: "السحب التلقائي", icon: Gift },
   { to: "/admin/showcase", label: "واجهة المتجر", icon: LayoutTemplate },
+  { to: "/admin/announcements", label: "شريط الإعلانات", icon: Megaphone },
   { to: "/admin/info", label: "المعلومات", icon: Info },
   { to: "/admin/branding", label: "الشعار والهوية", icon: Image },
 ] as const;

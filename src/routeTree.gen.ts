@@ -19,6 +19,7 @@ import { Route as InfoRouteImport } from './routes/info'
 import { Route as OffersRouteImport } from './routes/offers'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAnnouncementsRouteImport } from './routes/admin.announcements'
 import { Route as AdminBrandingRouteImport } from './routes/admin.branding'
 import { Route as AdminCategoriesRouteImport } from './routes/admin.categories'
 import { Route as AdminInfoRouteImport } from './routes/admin.info'
@@ -79,6 +80,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAnnouncementsRoute = AdminAnnouncementsRouteImport.update({
+  id: '/announcements',
+  path: '/announcements',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminBrandingRoute = AdminBrandingRouteImport.update({
   id: '/branding',
   path: '/branding',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/info': typeof InfoRoute
   '/offers': typeof OffersRoute
   '/products': typeof ProductsRouteWithChildren
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/info': typeof AdminInfoRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/info': typeof InfoRoute
   '/offers': typeof OffersRoute
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/info': typeof AdminInfoRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/info': typeof InfoRoute
   '/offers': typeof OffersRoute
   '/products': typeof ProductsRouteWithChildren
+  '/admin/announcements': typeof AdminAnnouncementsRoute
   '/admin/branding': typeof AdminBrandingRoute
   '/admin/categories': typeof AdminCategoriesRoute
   '/admin/info': typeof AdminInfoRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/info'
     | '/offers'
     | '/products'
+    | '/admin/announcements'
     | '/admin/branding'
     | '/admin/categories'
     | '/admin/info'
@@ -218,6 +228,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/info'
     | '/offers'
+    | '/admin/announcements'
     | '/admin/branding'
     | '/admin/categories'
     | '/admin/info'
@@ -239,6 +250,7 @@ export interface FileRouteTypes {
     | '/info'
     | '/offers'
     | '/products'
+    | '/admin/announcements'
     | '/admin/branding'
     | '/admin/categories'
     | '/admin/info'
@@ -335,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/announcements': {
+      id: '/admin/announcements'
+      path: '/announcements'
+      fullPath: '/admin/announcements'
+      preLoaderRoute: typeof AdminAnnouncementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/branding': {
       id: '/admin/branding'
       path: '/branding'
@@ -402,6 +421,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAnnouncementsRoute: typeof AdminAnnouncementsRoute
   AdminBrandingRoute: typeof AdminBrandingRoute
   AdminCategoriesRoute: typeof AdminCategoriesRoute
   AdminInfoRoute: typeof AdminInfoRoute
@@ -413,6 +433,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAnnouncementsRoute: AdminAnnouncementsRoute,
   AdminBrandingRoute: AdminBrandingRoute,
   AdminCategoriesRoute: AdminCategoriesRoute,
   AdminInfoRoute: AdminInfoRoute,

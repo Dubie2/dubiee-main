@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
 import { Lock, Menu, Search, ShoppingBag, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useStore } from "@/lib/store";
 
@@ -16,9 +16,18 @@ const links = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { state, cartCount, setIsCartOpen, setIsAdminAuthenticated } = useStore();
   const navigate = useNavigate();
-  const topOffer = state.offers[0];
+
+  useEffect(() => { setIsMounted(true); }, []);
+
+  // Build announcement items: use custom announcementBar if set, else fall back to first offer
+  const announcements: string[] = state.announcementBar?.length
+    ? state.announcementBar
+    : state.offers[0]
+    ? [`${state.offers[0].title} – خصم ${state.offers[0].discount}%`]
+    : [];
 
   // Admin secret 3-click trigger
   const [showAdminModal, setShowAdminModal] = useState(false);
@@ -65,10 +74,17 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-40">
-      {/* Announcement Bar */}
-      {topOffer && (
-        <div className="bg-foreground px-4 py-2 text-center text-xs font-bold text-background sm:text-sm">
-          {topOffer.title} - {topOffer.discount}
+      {/* Announcement Bar – scrolling marquee (client-only to avoid SSR mismatch) */}
+      {isMounted && announcements.length > 0 && (
+        <div className="relative overflow-hidden bg-foreground py-2 text-xs font-bold text-background sm:text-sm select-none">
+          {/* duplicated content for seamless loop */}
+          <div className="flex whitespace-nowrap animate-marquee">
+            {[...announcements, ...announcements].map((text, i) => (
+              <span key={i} className="mx-8 shrink-0">
+                ★ {text}
+              </span>
+            ))}
+          </div>
         </div>
       )}
 

@@ -142,6 +142,7 @@ type StoreState = {
   info: SiteInfo;
   branding: Branding;
   showcase: Showcase;
+  announcementBar: string[];
   cart: CartLine[];
   isCartOpen: boolean;
   lottery: LotteryState;
@@ -171,6 +172,7 @@ const defaultState: StoreState = {
     wallets: [],
   },
   branding: { logo: "", mark: "" },
+  announcementBar: [],
   cart: [],
   isCartOpen: false,
   lottery: {
@@ -305,6 +307,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const branding = { logo: "", mark: "" };
       const showcase: Showcase = { mainImage: "", gallery: [], link: "" };
       const lotterySettings: LotterySettings = { ...defaultState.lottery.settings };
+      let announcementBar: string[] = [];
 
       (settingsData || []).forEach((s: any) => {
         if (s.key_name === "logo") branding.logo = s.key_value || "";
@@ -316,6 +319,13 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             showcase.gallery = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value || [];
           } catch {
             showcase.gallery = [];
+          }
+        }
+        if (s.key_name === "announcementBar") {
+          try {
+            announcementBar = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value || [];
+          } catch {
+            announcementBar = [];
           }
         }
         if (s.key_name === "lotterySettings") {
@@ -397,6 +407,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         info,
         branding,
         showcase,
+        announcementBar,
         lottery: {
           tickets,
           rounds,
@@ -416,6 +427,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
               offers: nextState.offers,
               info: nextState.info,
               branding: nextState.branding,
+              announcementBar: nextState.announcementBar,
               lottery: nextState.lottery,
             }));
           } catch (e) {

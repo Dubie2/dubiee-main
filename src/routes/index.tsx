@@ -2,12 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
-import { HeroJewel } from "@/components/HeroJewel";
 import { ProductCard } from "@/components/ProductCard";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useStore } from "@/lib/store";
-
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -50,36 +48,27 @@ function Index() {
       <SiteHeader />
 
       <main id="top">
-        <section className="mx-auto flex max-w-6xl flex-col-reverse items-center gap-4 px-5 pt-24 pb-12 md:flex-row md:justify-between md:pt-32 md:pb-16">
+        <section className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 px-5 pt-28 pb-4 md:pt-32 md:pb-6">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease, delay: 0.5 }}
-            className="max-w-xl text-center md:text-right"
+            transition={{ duration: 0.9, ease, delay: 0.2 }}
+            className="w-full text-center"
           >
-            <div className="flex flex-wrap justify-center gap-2 md:justify-start">
+            <div className="flex flex-wrap justify-center gap-3">
               <Link
                 to="/products"
-                className="tap-pulse rounded-full bg-primary px-4 py-1.5 text-[11px] font-bold text-primary-foreground shadow-soft"
+                className="tap-pulse rounded-full bg-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-soft"
               >
                 اكتشفي المجموعة
               </Link>
               <Link
                 to="/offers"
-                className="tap-pulse glass rounded-full px-4 py-1.5 text-[11px] font-bold text-accent-foreground"
+                className="tap-pulse glass rounded-full px-5 py-2 text-sm font-bold text-accent-foreground"
               >
                 العروض الحالية
               </Link>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, ease, delay: 0.35 }}
-            className="w-full max-w-[420px]"
-          >
-            <HeroJewel />
           </motion.div>
         </section>
 

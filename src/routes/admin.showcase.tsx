@@ -132,16 +132,19 @@ function AdminShowcase() {
 
         {/* Showcase Link */}
         <div>
-          <h3 className="font-bold text-lg mb-2">رابط الواجهة (عند الضغط عليها)</h3>
-          <p className="text-xs text-muted-foreground mb-4">اختياري. إذا أردت أن يقوم العميل بالنقر على هذه الواجهة لينتقل إلى منتج معين أو قسم معين.</p>
-          <input
-            type="text"
-            dir="ltr"
-            placeholder="مثال: /products/12345"
+          <h3 className="font-bold text-lg mb-2">ربط الواجهة بمنتج (عند الضغط عليها)</h3>
+          <p className="text-xs text-muted-foreground mb-4">اختر المنتج الذي سيتم تحويل العميل إليه عند النقر على صورة العرض.</p>
+          <select
+            dir="rtl"
             value={link}
             onChange={(e) => setLink(e.target.value)}
             className="w-full rounded-2xl bg-background/50 border border-border px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
-          />
+          >
+            <option value="">بدون رابط (صورة ثابتة)</option>
+            {state.products.map(p => (
+              <option key={p.id} value={`/products/${p.id}`}>{p.name}</option>
+            ))}
+          </select>
         </div>
 
         <hr className="border-border/50" />
