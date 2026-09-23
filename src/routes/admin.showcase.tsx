@@ -21,6 +21,7 @@ function AdminShowcase() {
   // Local state for edits
   const [mainImage, setMainImage] = useState(showcase?.mainImage || "");
   const [gallery, setGallery] = useState<string[]>(showcase?.gallery || []);
+  const [link, setLink] = useState<string>(showcase?.link || "");
 
   const handleUploadMain = async (file: File) => {
     setIsUploadingMain(true);
@@ -64,6 +65,7 @@ function AdminShowcase() {
       const updates = [
         { key_name: "showcaseMain", key_value: mainImage },
         { key_name: "showcaseGallery", key_value: JSON.stringify(gallery) },
+        { key_name: "showcaseLink", key_value: link },
       ];
 
       for (const u of updates) {
@@ -124,6 +126,22 @@ function AdminShowcase() {
               )}
             </div>
           </div>
+        </div>
+
+        <hr className="border-border/50" />
+
+        {/* Showcase Link */}
+        <div>
+          <h3 className="font-bold text-lg mb-2">رابط الواجهة (عند الضغط عليها)</h3>
+          <p className="text-xs text-muted-foreground mb-4">اختياري. إذا أردت أن يقوم العميل بالنقر على هذه الواجهة لينتقل إلى منتج معين أو قسم معين.</p>
+          <input
+            type="text"
+            dir="ltr"
+            placeholder="مثال: /products/12345"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            className="w-full rounded-2xl bg-background/50 border border-border px-4 py-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition"
+          />
         </div>
 
         <hr className="border-border/50" />

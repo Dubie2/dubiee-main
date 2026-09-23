@@ -92,31 +92,49 @@ function Index() {
               transition={{ duration: 0.8, ease }}
               className="flex flex-col gap-4"
             >
-              <div className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group">
-                <img 
-                  src={state.showcase.mainImage} 
-                  alt="عرض مميز" 
-                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                />
-              </div>
+              {state.showcase.link ? (
+                <Link to={state.showcase.link} className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group block cursor-pointer">
+                  <img 
+                    src={state.showcase.mainImage} 
+                    alt="عرض مميز" 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </Link>
+              ) : (
+                <div className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group">
+                  <img 
+                    src={state.showcase.mainImage} 
+                    alt="عرض مميز" 
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+              )}
 
               {state.showcase.gallery && state.showcase.gallery.length > 0 && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4">
-                  {state.showcase.gallery.map((img, idx) => (
-                    <motion.div
-                      key={idx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: idx * 0.1 }}
-                      className="aspect-square rounded-2xl overflow-hidden shadow-md group"
-                    >
-                      <img 
-                        src={img} 
-                        alt={`صورة فرعية ${idx + 1}`} 
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                    </motion.div>
-                  ))}
+                  {state.showcase.gallery.map((img, idx) => {
+                    const content = (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: idx * 0.1 }}
+                        className="aspect-square rounded-2xl overflow-hidden shadow-md group"
+                      >
+                        <img 
+                          src={img} 
+                          alt={`صورة فرعية ${idx + 1}`} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                      </motion.div>
+                    );
+                    
+                    return state.showcase.link ? (
+                      <Link key={idx} to={state.showcase.link} className="block cursor-pointer">
+                        {content}
+                      </Link>
+                    ) : content;
+                  })}
                 </div>
               )}
             </motion.div>

@@ -132,6 +132,7 @@ export type LotteryState = {
 export type Showcase = {
   mainImage: string;
   gallery: string[];
+  link: string;
 };
 
 type StoreState = {
@@ -302,13 +303,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       // Map settings & branding
       const info: SiteInfo = { ...defaultState.info };
       const branding = { logo: "", mark: "" };
-      const showcase: Showcase = { mainImage: "", gallery: [] };
+      const showcase: Showcase = { mainImage: "", gallery: [], link: "" };
       const lotterySettings: LotterySettings = { ...defaultState.lottery.settings };
 
       (settingsData || []).forEach((s: any) => {
         if (s.key_name === "logo") branding.logo = s.key_value || "";
         if (s.key_name === "logoMark") branding.mark = s.key_value || "";
         if (s.key_name === "showcaseMain") showcase.mainImage = s.key_value || "";
+        if (s.key_name === "showcaseLink") showcase.link = s.key_value || "";
         if (s.key_name === "showcaseGallery") {
           try {
             showcase.gallery = typeof s.key_value === "string" ? JSON.parse(s.key_value) : s.key_value || [];
