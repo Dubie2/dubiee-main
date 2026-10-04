@@ -171,7 +171,7 @@ const defaultState: StoreState = {
     banks: [],
     wallets: [],
   },
-  branding: { logo: "", mark: "" },
+  branding: { logo: "/logo.png", mark: "/logo.png" },
   announcementBar: [],
   cart: [],
   isCartOpen: false,
@@ -304,14 +304,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
       // Map settings & branding
       const info: SiteInfo = { ...defaultState.info };
-      const branding = { logo: "", mark: "" };
+      const branding = { logo: "/logo.png", mark: "/logo.png" };
       const showcase: Showcase = { mainImage: "", gallery: [], link: "" };
       const lotterySettings: LotterySettings = { ...defaultState.lottery.settings };
       let announcementBar: string[] = [];
 
       (settingsData || []).forEach((s: any) => {
-        if (s.key_name === "logo") branding.logo = s.key_value || "";
-        if (s.key_name === "logoMark") branding.mark = s.key_value || "";
+        if (s.key_name === "logo") branding.logo = s.key_value || "/logo.png";
+        if (s.key_name === "logoMark") branding.mark = s.key_value || "/logo.png";
         if (s.key_name === "showcaseMain") showcase.mainImage = s.key_value || "";
         if (s.key_name === "showcaseLink") showcase.link = s.key_value || "";
         if (s.key_name === "showcaseGallery") {

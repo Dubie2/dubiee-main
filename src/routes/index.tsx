@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Sparkles } from "lucide-react";
 
 import { ProductCard } from "@/components/ProductCard";
+import { ShowcaseGallery } from "@/components/ShowcaseGallery";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { useStore } from "@/lib/store";
@@ -74,60 +75,7 @@ function Index() {
 
         {/* Showcase Area */}
         {state.showcase?.mainImage && (
-          <section className="mx-auto max-w-6xl px-5 py-6">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease }}
-              className="flex flex-col gap-4"
-            >
-              {state.showcase.link ? (
-                <Link to={state.showcase.link} className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group block cursor-pointer">
-                  <img 
-                    src={state.showcase.mainImage} 
-                    alt="عرض مميز" 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                </Link>
-              ) : (
-                <div className="w-full aspect-[4/5] sm:aspect-[21/9] rounded-3xl overflow-hidden shadow-2xl relative group">
-                  <img 
-                    src={state.showcase.mainImage} 
-                    alt="عرض مميز" 
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                  />
-                </div>
-              )}
-
-              {state.showcase.gallery && state.showcase.gallery.length > 0 && (
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4">
-                  {state.showcase.gallery.map((img, idx) => {
-                    const content = (
-                      <motion.div
-                        key={idx}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: idx * 0.1 }}
-                        className="aspect-square rounded-2xl overflow-hidden shadow-md group"
-                      >
-                        <img 
-                          src={img} 
-                          alt={`صورة فرعية ${idx + 1}`} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                      </motion.div>
-                    );
-                    
-                    return state.showcase.link ? (
-                      <Link key={idx} to={state.showcase.link} className="block cursor-pointer">
-                        {content}
-                      </Link>
-                    ) : content;
-                  })}
-                </div>
-              )}
-            </motion.div>
-          </section>
+          <ShowcaseGallery showcase={state.showcase} />
         )}
 
         {/* Collection */}
