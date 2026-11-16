@@ -39,18 +39,24 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("Root ErrorComponent caught:", error);
   const router = useRouter();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4" dir="rtl">
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+          حدث خطأ أثناء تحميل الصفحة
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+          نعتذر، حدث خطأ غير متوقع. يرجى إعادة المحاولة أو العودة للرئيسية.
         </p>
+        {error?.message && (
+          <div className="mt-4 p-3 bg-destructive/10 text-destructive text-xs font-mono rounded text-left overflow-auto max-h-48 border border-destructive/20" dir="ltr">
+            <p className="font-bold">{error.name}: {error.message}</p>
+            {error.stack && <pre className="mt-2 text-[10px] whitespace-pre-wrap">{error.stack}</pre>}
+          </div>
+        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -59,13 +65,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            إعادة المحاولة
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            الصفحة الرئيسية
           </a>
         </div>
       </div>
@@ -139,14 +145,6 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s?.location?.pathname || "" });
   const isAdmin = pathname.startsWith("/admin");
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        window.localStorage.clear();
-        window.sessionStorage.clear();
-      } catch (e) {}
-    }
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
