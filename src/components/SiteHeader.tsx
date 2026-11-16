@@ -17,7 +17,7 @@ const links = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const { state, cartCount, setIsCartOpen, setIsAdminAuthenticated } = useStore();
+  const { state, cartCount, setIsCartOpen } = useStore();
   const navigate = useNavigate();
 
   useEffect(() => { setIsMounted(true); }, []);
@@ -49,7 +49,8 @@ export function SiteHeader() {
       clickCountRef.current = 0;
       setPasscode("");
       setPasscodeError("");
-      setShowAdminModal(true);
+      // الدخول للإدارة يتم من صفحة /admin بحساب Supabase (لا رمز ثابت في الواجهة)
+      navigate({ to: "/admin" });
     } else {
       clickTimerRef.current = setTimeout(() => {
         clickCountRef.current = 0;
@@ -59,15 +60,10 @@ export function SiteHeader() {
 
   const handlePasscodeSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode.trim() === "123456") {
-      setIsAdminAuthenticated(true);
-      setShowAdminModal(false);
-      setPasscode("");
-      setPasscodeError("");
-      navigate({ to: "/admin" });
-    } else {
-      setPasscodeError("رمز الدخول غير صحيح، يرجى المحاولة مرة أخرى");
-    }
+    setShowAdminModal(false);
+    setPasscode("");
+    setPasscodeError("");
+    navigate({ to: "/admin" });
   };
 
   const logoSrc = state.branding.mark || state.branding.logo;

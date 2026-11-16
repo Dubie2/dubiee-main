@@ -17,11 +17,5 @@ CREATE TABLE IF NOT EXISTS offers (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS for offers
+-- RLS لجدول العروض: انظر supabase_security.sql
 ALTER TABLE offers ENABLE ROW LEVEL SECURITY;
-
-DROP POLICY IF EXISTS "Public read access for offers" ON offers;
-CREATE POLICY "Public read access for offers" ON offers FOR SELECT USING (is_active = true);
-
-DROP POLICY IF EXISTS "Admin full access for offers" ON offers;
-CREATE POLICY "Admin full access for offers" ON offers FOR ALL USING (true) WITH CHECK (true);

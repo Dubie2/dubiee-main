@@ -151,7 +151,6 @@ type StoreState = {
 };
 
 const CACHE_KEY = "dubai_abaya_store_cache_v3";
-const ADMIN_AUTH_KEY = "dubai_abaya_admin_auth_v2";
 
 const defaultState: StoreState = {
   categories: [],
@@ -189,7 +188,9 @@ const defaultState: StoreState = {
 function getInitialState(): StoreState {
   if (typeof window === "undefined") return defaultState;
   try {
-    const isAuthed = localStorage.getItem(ADMIN_AUTH_KEY) === "true";
+    // صلاحية الإدارة لا تُقرأ من التخزين المحلي: تُحدَّد من جلسة Supabase + دالة is_admin في الخادم
+    try { localStorage.removeItem("dubai_abaya_admin_auth_v2"); } catch { /* ignore */ }
+    const isAuthed = false;
     const cached = localStorage.getItem(CACHE_KEY);
     if (cached) {
       const parsed = JSON.parse(cached);
@@ -467,18 +468,27 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  // التحقق من جلسة المدير عبر Supabase Auth (الصلاحية الفعلية تفرضها سياسات RLS في قاعدة البيانات)
+  useEffect(() => {
+    const check = async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        setState((s) => ({ ...s, isAdminAuthenticated: false }));
+        return;
+      }
+      const { data: ok } = await supabase.rpc("is_admin");
+      setState((s) => ({ ...s, isAdminAuthenticated: ok === true }));
+      if (ok === true) refreshData();
+    };
+    check();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => { check(); });
+    return () => sub.subscription.unsubscribe();
+  }, []);
+
   const setIsAdminAuthenticated = (val: boolean) => {
     setState((s) => ({ ...s, isAdminAuthenticated: val }));
-    if (typeof window !== "undefined") {
-      try {
-        if (val) {
-          localStorage.setItem(ADMIN_AUTH_KEY, "true");
-        } else {
-          localStorage.removeItem(ADMIN_AUTH_KEY);
-        }
-      } catch (e) {
-        console.error("Failed to update admin auth in localStorage:", e);
-      }
+    if (!val) {
+      supabase.auth.signOut().finally(() => refreshData());
     }
   };
 

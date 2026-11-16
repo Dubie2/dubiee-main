@@ -103,16 +103,16 @@ function CheckoutPage() {
         total: d.total
       }));
 
-      const { error } = await supabase.from('orders').insert([{
-        customer_name: form.name,
-        customer_phone: form.phone,
-        delivery_address_link: form.mapLink || form.city, // fallback to city if no GPS
-        delivery_address_text: `${form.city} - ${form.address}`,
-        bank_deposit_reference: method === 'bank_wallet' ? form.receiptRef : 'COD',
-        total_amount: grand,
-        items: items,
-        status: method === 'bank_wallet' ? 'pending_verification' : 'processing'
-      }]);
+      // الطلب يُنشأ عبر دالة create_order في الخادم: تحسب الأسعار والإجمالي من قاعدة البيانات
+      // (لا يُقبل سعر أو إجمالي من المتصفح) وتطبّق حدّاً لعدد الطلبات
+      const { error } = await supabase.rpc('create_order', {
+        p_name: form.name,
+        p_phone: form.phone,
+        p_address_link: form.mapLink || form.city, // fallback to city if no GPS
+        p_address_text: `${form.city} - ${form.address}`,
+        p_bank_ref: method === 'bank_wallet' ? form.receiptRef : 'COD',
+        p_items: items.map(({ product_id, size, color, qty }) => ({ product_id, size, color, qty })),
+      });
 
       if (error) {
         throw new Error(error.message);

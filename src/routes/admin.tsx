@@ -3,6 +3,7 @@ import { Boxes, Gift, Home, Image, Info, LayoutDashboard, LayoutTemplate, Lock, 
 import { useState } from "react";
 
 import { useStore } from "@/lib/store";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -35,17 +36,36 @@ const nav = [
 function AdminLayout() {
   const { state, isAdminAuthenticated, setIsAdminAuthenticated } = useStore();
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
   const [passcode, setPasscode] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  // تسجيل دخول حقيقي عبر Supabase Auth ثم التأكد أن الحساب مدير (جدول admins)
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode.trim() === "123456") {
+    if (busy) return;
+    setBusy(true);
+    setError("");
+    try {
+      const { error: authErr } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: passcode,
+      });
+      if (authErr) {
+        setError("البريد أو كلمة المرور غير صحيحة");
+        return;
+      }
+      const { data: ok } = await supabase.rpc("is_admin");
+      if (ok !== true) {
+        await supabase.auth.signOut();
+        setError("هذا الحساب لا يملك صلاحية الإدارة");
+        return;
+      }
       setIsAdminAuthenticated(true);
-      setError("");
       setPasscode("");
-    } else {
-      setError("رمز الدخول غير صحيح");
+    } finally {
+      setBusy(false);
     }
   };
 
@@ -54,7 +74,6 @@ function AdminLayout() {
     navigate({ to: "/" });
   };
 
-  // If not authenticated, require passcode 123456
   if (!isAdminAuthenticated) {
     return (
       <div dir="rtl" className="flex min-h-screen items-center justify-center bg-secondary/40 p-4">
@@ -65,18 +84,36 @@ function AdminLayout() {
             </div>
             <div>
               <h2 className="text-xl font-bold text-foreground">الدخول إلى لوحة التحكم</h2>
-              <p className="text-xs text-muted-foreground mt-1">يرجى إدخال رمز المرور للمتابعة</p>
+              <p className="text-xs text-muted-foreground mt-1">سجّل الدخول بحساب المدير للمتابعة</p>
             </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-semibold text-muted-foreground mb-2 text-right">
-                رمز الدخول
+                البريد الإلكتروني
+              </label>
+              <input
+                type="email"
+                dir="ltr"
+                autoFocus
+                autoComplete="username"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (error) setError("");
+                }}
+                placeholder="admin@example.com"
+                className="w-full rounded-2xl border border-border bg-background px-4 py-3 text-center text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground mb-2 text-right">
+                كلمة المرور
               </label>
               <input
                 type="password"
-                autoFocus
+                autoComplete="current-password"
                 value={passcode}
                 onChange={(e) => {
                   setPasscode(e.target.value);
@@ -92,10 +129,10 @@ function AdminLayout() {
 
             <button
               type="submit"
-              disabled={!passcode}
+              disabled={!passcode || !email || busy}
               className="w-full rounded-2xl bg-primary py-3.5 text-sm font-bold text-primary-foreground shadow-soft hover:bg-primary/90 transition disabled:opacity-50"
             >
-              تسجيل الدخول
+              {busy ? "جارٍ التحقق…" : "تسجيل الدخول"}
             </button>
 
             <Link
