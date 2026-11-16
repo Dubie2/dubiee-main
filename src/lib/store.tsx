@@ -447,24 +447,38 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     refreshData();
 
-    // Setup Supabase Real-time Channel across all pages & tabs
-    const channel = supabase
-      .channel("store-global-realtime")
-      .on("postgres_changes", { event: "*", schema: "public", table: "system_settings" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "categories" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "products" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "offers" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "bank_accounts" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "lottery_rounds" }, () => refreshData())
-      .on("postgres_changes", { event: "*", schema: "public", table: "lottery_coupons" }, () => refreshData())
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          console.log("Realtime synchronized with Supabase database.");
-        }
-      });
+    // Setup Supabase Real-time Channel safely across all pages & tabs
+    let channel: any = null;
+    try {
+      if (typeof window !== "undefined" && typeof window.WebSocket !== "undefined") {
+        channel = supabase
+          .channel("store-global-realtime")
+          .on("postgres_changes", { event: "*", schema: "public", table: "system_settings" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "categories" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "products" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "offers" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "bank_accounts" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "lottery_rounds" }, () => refreshData())
+          .on("postgres_changes", { event: "*", schema: "public", table: "lottery_coupons" }, () => refreshData())
+          .subscribe((status, err) => {
+            if (err) {
+              console.warn("Supabase Realtime notice:", err);
+            }
+            if (status === "SUBSCRIBED") {
+              console.log("Realtime synchronized with Supabase database.");
+            }
+          });
+      }
+    } catch (wsErr) {
+      console.warn("Realtime WebSocket connection bypassed:", wsErr);
+    }
 
     return () => {
-      supabase.removeChannel(channel);
+      if (channel) {
+        try {
+          supabase.removeChannel(channel);
+        } catch {}
+      }
     };
   }, []);
 
